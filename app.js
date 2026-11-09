@@ -312,6 +312,11 @@ function conectarTabs() {
       for (const panel of document.querySelectorAll('.panel')) {
         panel.hidden = panel.id !== destino;
       }
+      // Re-dispara la animación de entrada del panel visible
+      const visible = el(destino);
+      visible.classList.remove('entra');
+      void visible.offsetWidth;
+      visible.classList.add('entra');
     });
   }
 }

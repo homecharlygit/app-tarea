@@ -66,17 +66,49 @@ body {
 }
 
 @keyframes popIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes cardIn { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes cardIn { from { opacity: 0; transform: translateY(12px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes pulseOnce { 0% { transform: scale(1); } 40% { transform: scale(1.06); } 100% { transform: scale(1); } }
-@keyframes fabIn { 0% { opacity: 0; transform: translateY(26px) scale(.8); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes fabIn { 0% { opacity: 0; transform: translateY(26px) scale(.8); } 60% { transform: translateY(-3px) scale(1.04); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes panelIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes checkPop { 0% { transform: scale(0); } 55% { transform: scale(1.35); } 100% { transform: scale(1); } }
+@keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes zoomIn { from { opacity: 0; transform: scale(.9); } to { opacity: 1; transform: scale(1); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Respeta a quien prefiere menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+/* Entrada al cambiar de pestaña */
+.panel.entra { animation: panelIn .34s var(--bounce) both; }
 
 /* --- Barra superior --- */
 .topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 4px 16px;
+  margin: 0 -16px;
+  padding: 12px 20px 14px;
+  background: var(--m3-surface);
   animation: popIn .5s var(--bounce) both;
+}
+/* Blur sólo si el navegador lo soporta; capa propia para que sea barato */
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .topbar {
+    background: color-mix(in srgb, var(--m3-surface) 60%, transparent);
+    -webkit-backdrop-filter: blur(18px) saturate(1.3);
+    backdrop-filter: blur(18px) saturate(1.3);
+    transform: translateZ(0);
+    will-change: backdrop-filter;
+  }
 }
 .topbar h1 {
   margin: 0;
@@ -219,6 +251,7 @@ body {
   border-color: var(--m3-primary);
   color: var(--m3-on-primary);
 }
+.check.on .material-symbols-rounded { animation: checkPop .3s var(--bounce); }
 
 .item .cuerpo { flex: 1; min-width: 0; }
 .item .titulo {
@@ -367,8 +400,16 @@ body {
 @media (min-width: 600px) {
   .dialogo { margin: auto; border-radius: 32px; }
 }
-.dialogo::backdrop { background: rgba(0, 0, 0, .5); }
-.dialogo[open] { animation: popIn .32s var(--bounce); }
+.dialogo::backdrop { background: rgba(0, 0, 0, .45); }
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .dialogo::backdrop {
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+  }
+}
+.dialogo[open] { animation: sheetUp .36s var(--bounce); }
+.dialogo[open]::backdrop { animation: fadeIn .3s ease; }
+@media (min-width: 600px) { .dialogo[open] { animation: zoomIn .28s var(--bounce); } }
 .dialogo .form {
   display: flex;
   flex-direction: column;
@@ -477,7 +518,15 @@ body {
   background: var(--m3-surface-container-high);
   color: var(--m3-on-surface);
   box-shadow: 0 8px 28px rgba(0, 0, 0, .3);
-  animation: popIn .25s var(--bounce);
+  animation: zoomIn .24s var(--bounce);
+  transform-origin: top right;
+}
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .menu-color {
+    background: color-mix(in srgb, var(--m3-surface-container-high) 75%, transparent);
+    -webkit-backdrop-filter: blur(22px) saturate(1.4);
+    backdrop-filter: blur(22px) saturate(1.4);
+  }
 }
 .menu-color[hidden] { display: none; }
 .menu-color-tit { margin: 0 0 14px; font-size: 14px; font-weight: 700; }

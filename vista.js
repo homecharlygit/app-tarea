@@ -46,8 +46,9 @@ export function pintarTareas(contenedor, estado, filtro, hoyIso, acciones) {
     return;
   }
 
-  for (const tarea of tareas) {
+  for (const [i, tarea] of tareas.entries()) {
     const item = nodo('div', 'item' + (tarea.hecha ? ' hecha' : ''));
+    item.style.animationDelay = `${Math.min(i, 10) * 0.035}s`;
     item.addEventListener('click', () => acciones.onAbrir(tarea.id));
 
     const barra = nodo('span', 'barra');
@@ -98,9 +99,10 @@ export function pintarExamenes(contenedor, estado, hoyIso, acciones) {
     return;
   }
 
-  for (const examen of examenes) {
+  for (const [i, examen] of examenes.entries()) {
     const pasado = diasHasta(examen.fecha, hoyIso) < 0;
     const item = nodo('div', 'item' + (pasado ? ' pasado' : ''));
+    item.style.animationDelay = `${Math.min(i, 10) * 0.035}s`;
     item.addEventListener('click', () => acciones.onAbrir(examen.id));
 
     const barra = nodo('span', 'barra');
@@ -135,8 +137,9 @@ export function pintarMaterias(contenedor, estado, acciones) {
   contenedor.appendChild(btn);
 
   const lista = nodo('div', 'lista');
-  for (const materia of estado.materias) {
+  for (const [i, materia] of estado.materias.entries()) {
     const item = nodo('div', 'item materia');
+    item.style.animationDelay = `${Math.min(i, 10) * 0.035}s`;
     item.addEventListener('click', () => acciones.onAbrir(materia.id));
 
     const circulo = nodo('span', 'circulo');
