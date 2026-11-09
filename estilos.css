@@ -1,0 +1,159 @@
+/* estilos.css — ajustes de layout sobre el tema M3E.
+   Los colores salen de los tokens --md-sys-color-* que publica <m3e-theme>.
+   Cada var() lleva un respaldo por si la librería aún no cargó. */
+
+:root {
+  --ancho-max: 720px;
+  --naranja-manana: #F57C00;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  background: var(--md-sys-color-background, #fdfcff);
+  color: var(--md-sys-color-on-background, #1a1c1e);
+}
+
+main {
+  max-width: var(--ancho-max);
+  margin: 0 auto;
+  padding: 8px 12px 96px; /* espacio inferior para que el FAB no tape el último */
+}
+
+.filtros {
+  margin: 12px 4px 4px;
+}
+
+/* --- Listas --- */
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px 12px 20px;
+  border-radius: 16px;
+  background: var(--md-sys-color-surface-container, #f1f1f4);
+  color: var(--md-sys-color-on-surface, #1a1c1e);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+/* Barrita de 6px a la izquierda con el color de la materia */
+.item .barra {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background: var(--md-sys-color-outline-variant, #c3c7cf);
+}
+
+.item .cuerpo {
+  flex: 1;
+  min-width: 0;
+}
+
+.item .titulo {
+  font-weight: 500;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+.item.hecha .titulo {
+  text-decoration: line-through;
+  color: var(--md-sys-color-on-surface-variant, #43474e);
+}
+
+.item .meta {
+  font-size: 13px;
+  color: var(--md-sys-color-on-surface-variant, #43474e);
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
+
+.item .meta .sin-materia {
+  color: var(--md-sys-color-outline, #73777f);
+  font-style: italic;
+}
+
+/* Etiqueta de urgencia */
+.urgencia {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  background: var(--md-sys-color-surface-container-high, #e9e9ec);
+  color: var(--md-sys-color-on-surface-variant, #43474e);
+}
+.urgencia.vencida,
+.urgencia.hoy {
+  background: color-mix(in srgb, var(--md-sys-color-error, #ba1a1a) 14%, transparent);
+  color: var(--md-sys-color-error, #ba1a1a);
+}
+.urgencia.manana {
+  background: color-mix(in srgb, var(--naranja-manana) 16%, transparent);
+  color: var(--naranja-manana);
+}
+.urgencia.hecha {
+  background: color-mix(in srgb, var(--md-sys-color-primary, #1a73e8) 14%, transparent);
+  color: var(--md-sys-color-primary, #1a73e8);
+}
+
+/* Exámenes ya pasados */
+.item.pasado {
+  opacity: 0.6;
+}
+
+/* Estado vacío */
+.vacio {
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--md-sys-color-on-surface-variant, #43474e);
+  font-size: 15px;
+}
+
+/* --- FAB --- */
+#btn-nueva {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 10;
+}
+
+/* --- Aviso (snackbar simple) --- */
+#aviso {
+  position: fixed;
+  left: 50%;
+  bottom: 88px;
+  transform: translate(-50%, 20px);
+  max-width: min(92vw, 560px);
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: var(--md-sys-color-inverse-surface, #2f3033);
+  color: var(--md-sys-color-inverse-on-surface, #f1f0f4);
+  font-size: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 20;
+}
+#aviso.visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (max-width: 420px) {
+  main { padding: 6px 10px 92px; }
+}
