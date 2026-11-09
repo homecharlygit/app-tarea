@@ -12,9 +12,14 @@ import {
   crearExamen,
   actualizarExamen,
   borrarExamen,
+  crearMateria,
+  actualizarMateria,
+  borrarMateria,
+  contarUsos,
+  PALETA,
 } from './datos.js';
 import { hoyISO } from './fechas.js';
-import { pintarTareas, pintarExamenes, mostrarAviso } from './vista.js';
+import { pintarTareas, pintarExamenes, pintarMaterias, mostrarAviso } from './vista.js';
 
 const el = (id) => document.getElementById(id);
 
@@ -34,7 +39,10 @@ function pintarTodo() {
   const hoy = hoyISO();
   pintarTareas(el('lista-tareas'), estado, filtro, hoy, { onAlternar, onAbrir });
   pintarExamenes(el('lista-examenes'), estado, hoy, { onAbrir });
-  // La pestaña Materias se pinta en la Task 5.
+  pintarMaterias(el('lista-materias'), estado, {
+    onAbrir: onAbrirMateria,
+    onNueva: () => abrirFormularioMateria({}),
+  });
 }
 
 /** Guarda el nuevo estado, vuelve a pintar y avisa si el guardado falló. */
@@ -172,6 +180,85 @@ function borrarFormulario() {
   dialogo.close();
 }
 
+// ===================== Materias (diálogo) =====================
+
+const dialogoMateria = el('dialogo-materia');
+let edicionMateria = null; // id en edición, o null
+let colorMateria = PALETA[0].color;
+
+function onAbrirMateria(id) {
+  abrirFormularioMateria({ id });
+}
+
+/** Dibuja los 8 swatches de PALETA y marca el color activo. */
+function pintarSwatches() {
+  const cont = el('campo-mat-colores');
+  cont.replaceChildren();
+  for (const c of PALETA) {
+    const sw = document.createElement('button');
+    sw.type = 'button';
+    sw.className = 'swatch' + (c.color.toLowerCase() === colorMateria.toLowerCase() ? ' sel' : '');
+    sw.style.background = c.color;
+    sw.setAttribute('aria-label', c.nombre);
+    sw.addEventListener('click', () => elegirColor(c.color));
+    cont.appendChild(sw);
+  }
+}
+
+function elegirColor(color) {
+  colorMateria = color;
+  el('campo-mat-color-custom').value = color;
+  pintarSwatches();
+}
+
+export function abrirFormularioMateria({ id = null } = {}) {
+  const editando = id != null;
+  const materia = editando ? estado.materias.find((m) => m.id === id) : null;
+  if (editando && !materia) return;
+  edicionMateria = editando ? id : null;
+
+  el('dialogo-materia-titulo').textContent = editando ? 'Editar materia' : 'Nueva materia';
+  el('campo-mat-nombre').value = materia ? materia.nombre : '';
+  el('error-mat-nombre').textContent = '';
+  el('campo-mat-nombre').closest('.campo').classList.remove('con-error');
+
+  colorMateria = materia ? materia.color : PALETA[0].color;
+  el('campo-mat-color-custom').value = colorMateria;
+  pintarSwatches();
+
+  el('btn-mat-borrar').hidden = !editando;
+  dialogoMateria.showModal();
+  el('campo-mat-nombre').focus();
+}
+
+function guardarMateriaForm() {
+  const nombre = el('campo-mat-nombre').value;
+  if (!nombre || !nombre.trim()) {
+    el('error-mat-nombre').textContent = 'Escribe un nombre';
+    el('campo-mat-nombre').closest('.campo').classList.add('con-error');
+    return;
+  }
+  const datos = { nombre, color: colorMateria };
+  const nuevo = edicionMateria
+    ? actualizarMateria(estado, edicionMateria, datos)
+    : crearMateria(estado, datos);
+  actualizar(nuevo);
+  dialogoMateria.close();
+}
+
+function borrarMateriaForm() {
+  if (!edicionMateria) return;
+  const materia = estado.materias.find((m) => m.id === edicionMateria);
+  const nombre = materia ? materia.nombre : 'esta materia';
+  const usos = contarUsos(estado, edicionMateria);
+  const mensaje = usos > 0
+    ? `«${nombre}» se usa en ${usos} ${usos === 1 ? 'elemento' : 'elementos'}. Quedarán como «Sin materia». ¿Borrar?`
+    : `¿Borrar «${nombre}»?`;
+  if (!window.confirm(mensaje)) return;
+  actualizar(borrarMateria(estado, edicionMateria));
+  dialogoMateria.close();
+}
+
 // ===================== Chips de filtro =====================
 function conectarFiltros() {
   const chips = Array.from(el('filtro-tareas').querySelectorAll('m3e-filter-chip'));
@@ -194,6 +281,11 @@ function conectarBotones() {
   el('btn-guardar')?.addEventListener('click', guardarFormulario);
   el('btn-cancelar')?.addEventListener('click', () => dialogo.close());
   el('btn-borrar')?.addEventListener('click', borrarFormulario);
+
+  el('btn-mat-guardar')?.addEventListener('click', guardarMateriaForm);
+  el('btn-mat-cancelar')?.addEventListener('click', () => dialogoMateria.close());
+  el('btn-mat-borrar')?.addEventListener('click', borrarMateriaForm);
+  el('campo-mat-color-custom')?.addEventListener('input', (e) => elegirColor(e.target.value));
   // #btn-color se conecta en la Task 6.
 }
 

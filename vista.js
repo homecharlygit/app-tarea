@@ -118,6 +118,36 @@ export function pintarExamenes(contenedor, estado, hoyIso, acciones) {
   }
 }
 
+/**
+ * Pinta la lista de materias (círculo de color + nombre) y el botón "Agregar".
+ * @param {{ onAbrir(id), onNueva() }} acciones
+ */
+export function pintarMaterias(contenedor, estado, acciones) {
+  limpiar(contenedor);
+
+  const btn = nodo('button', 'btn-agregar', '＋ Agregar materia');
+  btn.type = 'button';
+  btn.addEventListener('click', () => acciones.onNueva());
+  contenedor.appendChild(btn);
+
+  const lista = nodo('div', 'lista');
+  for (const materia of estado.materias) {
+    const item = nodo('div', 'item materia');
+    item.addEventListener('click', () => acciones.onAbrir(materia.id));
+
+    const circulo = nodo('span', 'circulo');
+    circulo.style.background = materia.color;
+    item.appendChild(circulo);
+
+    const cuerpo = nodo('div', 'cuerpo');
+    cuerpo.appendChild(nodo('div', 'titulo', materia.nombre));
+    item.appendChild(cuerpo);
+
+    lista.appendChild(item);
+  }
+  contenedor.appendChild(lista);
+}
+
 /** Muestra un aviso temporal abajo (tipo snackbar). */
 let avisoTimer = null;
 export function mostrarAviso(texto) {

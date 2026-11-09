@@ -114,6 +114,35 @@
         </div>
       </div>
     </dialog>
+
+    <!-- Diálogo Nueva/Editar materia -->
+    <dialog id="dialogo-materia" class="dialogo">
+      <div class="form">
+        <h2 id="dialogo-materia-titulo">Nueva materia</h2>
+
+        <label class="campo">
+          <span class="etq">Nombre</span>
+          <input type="text" id="campo-mat-nombre" maxlength="40" autocomplete="off" />
+          <span class="error" id="error-mat-nombre"></span>
+        </label>
+
+        <div class="campo">
+          <span class="etq">Color</span>
+          <div id="campo-mat-colores" class="colores"></div>
+          <label class="color-custom">
+            <input type="color" id="campo-mat-color-custom" />
+            <span>Personalizado</span>
+          </label>
+        </div>
+
+        <div class="acciones">
+          <m3e-button id="btn-mat-borrar" variant="text" type="button">Borrar</m3e-button>
+          <span class="espaciador"></span>
+          <m3e-button id="btn-mat-cancelar" variant="text" type="button">Cancelar</m3e-button>
+          <m3e-button id="btn-mat-guardar" variant="filled" type="button">Guardar</m3e-button>
+        </div>
+      </div>
+    </dialog>
   </m3e-theme>
 
   <script type="module" src="app.js"></script>
