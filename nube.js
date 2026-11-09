@@ -14,6 +14,7 @@ import { CLIENT_ID } from './config.js';
 const SCOPE = 'https://www.googleapis.com/auth/drive.appdata openid email profile';
 const ARCHIVO = 'app-tarea.json';
 const CLAVE_SESION = 'app-tarea:sesion';
+const CLAVE_TOKEN = 'app-tarea:token';
 
 let tokenClient = null;
 let accessToken = null;
@@ -52,12 +53,19 @@ export function initNube(callbacks) {
       callback: async (resp) => {
         if (resp.error || !resp.access_token) return;
         accessToken = resp.access_token;
+        const dura = (resp.expires_in ? Number(resp.expires_in) : 3600) * 1000;
+        guardarToken(accessToken, Date.now() + dura - 60000); // 1 min de colchón
         localStorage.setItem(CLAVE_SESION, '1');
         await trasConectar();
       },
     });
-    // Si ya había sesión, intenta reconectar en silencio (sin popup).
-    if (localStorage.getItem(CLAVE_SESION) === '1') {
+    // Restaurar sesión: si hay un token guardado y vigente, reusarlo (así no se
+    // cierra sesión al refrescar). Si venció, intento silencioso (sin popup).
+    const guardado = leerToken();
+    if (guardado) {
+      accessToken = guardado;
+      trasConectar();
+    } else if (localStorage.getItem(CLAVE_SESION) === '1') {
       tokenClient.requestAccessToken({ prompt: '' });
     }
   });
@@ -76,6 +84,7 @@ export function cerrarSesion() {
   archivoId = null;
   usuario = null;
   localStorage.removeItem(CLAVE_SESION);
+  localStorage.removeItem(CLAVE_TOKEN);
   if (t && window.google?.accounts?.oauth2) {
     google.accounts.oauth2.revoke(t, () => {});
   }
@@ -115,6 +124,23 @@ export async function guardarEnNube(estado) {
 
 // --- Internos ---
 
+function guardarToken(token, expiraMs) {
+  try {
+    localStorage.setItem(CLAVE_TOKEN, JSON.stringify({ token, expiraMs }));
+  } catch {
+    /* almacenamiento bloqueado: ni modo, se pedirá token de nuevo */
+  }
+}
+
+function leerToken() {
+  try {
+    const d = JSON.parse(localStorage.getItem(CLAVE_TOKEN) || 'null');
+    return d && d.token && d.expiraMs > Date.now() ? d.token : null;
+  } catch {
+    return null;
+  }
+}
+
 function esperarGIS() {
   return new Promise((res) => {
     if (window.google?.accounts?.oauth2) return res();
@@ -129,6 +155,13 @@ function esperarGIS() {
 
 async function trasConectar() {
   usuario = await obtenerPerfil();
+  if (!usuario) {
+    // Token vencido o inválido: limpiar y mostrar como desconectado.
+    accessToken = null;
+    localStorage.removeItem(CLAVE_TOKEN);
+    cbs.onSesion?.(null);
+    return;
+  }
   cbs.onSesion?.(usuario);
   const datos = await descargar();
   if (datos) {
