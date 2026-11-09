@@ -103,9 +103,9 @@ body {
 /* Blur sólo si el navegador lo soporta; capa propia para que sea barato */
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .topbar {
-    background: color-mix(in srgb, var(--m3-surface) 60%, transparent);
-    -webkit-backdrop-filter: blur(18px) saturate(1.3);
-    backdrop-filter: blur(18px) saturate(1.3);
+    background: color-mix(in srgb, var(--m3-surface) 42%, transparent);
+    -webkit-backdrop-filter: blur(30px) saturate(1.5);
+    backdrop-filter: blur(30px) saturate(1.5);
     transform: translateZ(0);
     will-change: backdrop-filter;
   }
@@ -385,6 +385,13 @@ body {
   z-index: 40;
 }
 #aviso.visible { opacity: 1; transform: translate(-50%, 0); }
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  #aviso {
+    background: color-mix(in srgb, var(--m3-on-surface) 80%, transparent);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    backdrop-filter: blur(16px) saturate(1.4);
+  }
+}
 
 /* --- Diálogos (bottom sheet) --- */
 .dialogo {
@@ -400,11 +407,16 @@ body {
 @media (min-width: 600px) {
   .dialogo { margin: auto; border-radius: 32px; }
 }
-.dialogo::backdrop { background: rgba(0, 0, 0, .45); }
+.dialogo::backdrop { background: rgba(0, 0, 0, .4); }
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .dialogo::backdrop {
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+  }
+  .dialogo {
+    background: color-mix(in srgb, var(--m3-surface) 80%, transparent);
+    -webkit-backdrop-filter: blur(30px) saturate(1.5);
+    backdrop-filter: blur(30px) saturate(1.5);
   }
 }
 .dialogo[open] { animation: sheetUp .36s var(--bounce); }
@@ -523,9 +535,10 @@ body {
 }
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .menu-color {
-    background: color-mix(in srgb, var(--m3-surface-container-high) 75%, transparent);
-    -webkit-backdrop-filter: blur(22px) saturate(1.4);
-    backdrop-filter: blur(22px) saturate(1.4);
+    background: color-mix(in srgb, var(--m3-surface-container-high) 55%, transparent);
+    -webkit-backdrop-filter: blur(34px) saturate(1.6);
+    backdrop-filter: blur(34px) saturate(1.6);
+    border: 1px solid color-mix(in srgb, var(--m3-on-surface) 10%, transparent);
   }
 }
 .menu-color[hidden] { display: none; }
