@@ -21,6 +21,14 @@ import {
 } from './datos.js';
 import { hoyISO } from './fechas.js';
 import { pintarTareas, pintarExamenes, pintarMaterias, mostrarAviso } from './vista.js';
+import {
+  initNube,
+  nubeConfigurada,
+  iniciarSesion,
+  cerrarSesion,
+  estaConectado,
+  guardarEnNube,
+} from './nube.js';
 
 const el = (id) => document.getElementById(id);
 
@@ -53,6 +61,15 @@ export function actualizar(nuevoEstado) {
   aplicarColor(estado.color);
   pintarTodo();
   if (aviso) mostrarAviso(aviso);
+  sincronizar();
+}
+
+// Sube a Google Drive, sin atropellar: espera a que dejes de teclear.
+let timerSync = null;
+function sincronizar() {
+  if (!estaConectado()) return;
+  clearTimeout(timerSync);
+  timerSync = setTimeout(() => guardarEnNube(estado), 1500);
 }
 
 /** Fija --m3-primary; por color-mix, toda la app se recolorea. */
@@ -266,6 +283,52 @@ function borrarMateriaForm() {
   dialogoMateria.close();
 }
 
+// ===================== Cuenta de Google =====================
+
+const menuCuenta = el('menu-cuenta');
+
+/** Actualiza la UI según haya sesión o no. */
+function refrescarCuenta(usuario) {
+  const dentro = !!usuario;
+  el('cuenta-conectado').hidden = !dentro;
+  el('cuenta-desconectado').hidden = dentro;
+  const btn = el('btn-cuenta');
+  if (dentro) {
+    el('cuenta-nombre').textContent = usuario.name ?? 'Tu cuenta';
+    el('cuenta-correo').textContent = usuario.email ?? '';
+    const foto = el('cuenta-foto');
+    if (usuario.picture) { foto.src = usuario.picture; foto.hidden = false; }
+    // Marca el botón como "conectado"
+    btn.classList.add('conectado');
+    btn.querySelector('.material-symbols-rounded').textContent = 'account_circle';
+  } else {
+    el('cuenta-foto').hidden = true;
+    btn.classList.remove('conectado');
+  }
+}
+
+/** Llega cuando Drive tenía datos: se adoptan como fuente de verdad. */
+function recibirDatosNube(estadoNube) {
+  if (!estadoNube || !Array.isArray(estadoNube.tareas) || !Array.isArray(estadoNube.materias)) return;
+  estado = estadoNube;
+  guardar(window.localStorage, estado);
+  aplicarColor(estado.color);
+  pintarTodo();
+  mostrarAviso('Datos sincronizados desde tu Google Drive');
+}
+
+function abrirMenuCuenta() { menuCuenta.hidden = false; }
+function cerrarMenuCuenta() { menuCuenta.hidden = true; }
+
+function alClicCuenta() {
+  if (!nubeConfigurada()) {
+    mostrarAviso('Falta configurar tu Client ID de Google (ver README)');
+    return;
+  }
+  if (menuCuenta.hidden) abrirMenuCuenta();
+  else cerrarMenuCuenta();
+}
+
 // ===================== Selector de color de la app =====================
 
 const menuColor = el('menu-color');
@@ -358,6 +421,16 @@ function conectarBotones() {
       cerrarMenuColor();
     }
   });
+
+  // Cuenta de Google
+  el('btn-cuenta')?.addEventListener('click', (e) => { e.stopPropagation(); alClicCuenta(); });
+  el('btn-iniciar-sesion')?.addEventListener('click', () => { iniciarSesion(); cerrarMenuCuenta(); });
+  el('btn-cerrar-sesion')?.addEventListener('click', () => { cerrarSesion(); cerrarMenuCuenta(); });
+  document.addEventListener('click', (e) => {
+    if (!menuCuenta.hidden && !menuCuenta.contains(e.target) && !el('btn-cuenta').contains(e.target)) {
+      cerrarMenuCuenta();
+    }
+  });
 }
 
 // Arranque
@@ -367,3 +440,10 @@ conectarBotones();
 aplicarColor(estado.color);
 pintarTodo();
 if (inicio.aviso) mostrarAviso(inicio.aviso);
+
+// Nube (solo se activa si config.js tiene un Client ID real)
+initNube({
+  onSesion: refrescarCuenta,
+  onDatos: recibirDatosNube,
+  estadoActual: () => estado,
+});

@@ -63,9 +63,28 @@ Antes de abrir el PR, corre `npm test` y prueba la app en el navegador.
 
 ## ⚠️ Nota sobre los datos
 
-Los datos viven **solo en el navegador donde los creaste** (`localStorage`). La
-compu y el celular no se sincronizan, y no se comparten entre personas. Si
-borras los datos del navegador, se pierden.
+Sin iniciar sesión, los datos viven **solo en el navegador donde los creaste**
+(`localStorage`): la compu y el celular no se sincronizan. Si inicias sesión con
+Google (ver abajo), se sincronizan por tu Google Drive.
+
+## 🔐 Cuenta de Google (sincronización)
+
+El login es **opcional**: si no lo configuras, la app funciona igual en modo
+local. Para activarlo necesitas un **OAuth Client ID** (gratis, en tu cuenta):
+
+1. Entra a [Google Cloud Console](https://console.cloud.google.com/) y crea un
+   proyecto.
+2. **APIs y servicios → Biblioteca** → busca y **habilita "Google Drive API"**.
+3. **APIs y servicios → Pantalla de consentimiento de OAuth**: tipo *Externo*,
+   pon nombre y tu correo; en *Usuarios de prueba* agrega tu propio correo.
+4. **Credenciales → Crear credenciales → ID de cliente de OAuth → Aplicación
+   web**. En *Orígenes autorizados de JavaScript* agrega:
+   - `https://homecharlygit.github.io`
+   - `http://localhost:8000` (para probar en tu compu)
+5. Copia el **Client ID** y pégalo en **`config.js`** (reemplaza `TU_CLIENT_ID…`).
+
+Los datos se guardan en una **carpeta oculta de tu Drive** (`appDataFolder`),
+que solo esta app puede ver. Nada se comparte con nadie más.
 
 ## 🛠️ Activar GitHub Pages (una vez)
 

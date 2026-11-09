@@ -10,15 +10,23 @@
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..600,0..1,0" />
 
+  <!-- Google Identity Services (login) -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
   <link rel="stylesheet" href="estilos.css" />
 </head>
 <body>
   <div class="app">
     <header class="topbar">
       <h1>Mis Tareas</h1>
-      <button id="btn-color" class="icon-btn-tonal" aria-label="Color de la app" type="button">
-        <span class="material-symbols-rounded">palette</span>
-      </button>
+      <div class="acciones-top">
+        <button id="btn-cuenta" class="icon-btn-tonal" aria-label="Cuenta de Google" type="button">
+          <span class="material-symbols-rounded">account_circle</span>
+        </button>
+        <button id="btn-color" class="icon-btn-tonal" aria-label="Color de la app" type="button">
+          <span class="material-symbols-rounded">palette</span>
+        </button>
+      </div>
     </header>
 
     <nav class="tabs" id="tabs">
@@ -111,6 +119,25 @@
       <input type="color" id="menu-color-custom" />
       <span>Personalizado</span>
     </label>
+  </div>
+
+  <!-- Menú de cuenta de Google -->
+  <div id="menu-cuenta" class="menu-color" hidden>
+    <div id="cuenta-conectado" hidden>
+      <div class="cuenta-info">
+        <img id="cuenta-foto" alt="" />
+        <div class="cuenta-textos">
+          <p id="cuenta-nombre"></p>
+          <p id="cuenta-correo"></p>
+        </div>
+      </div>
+      <p class="cuenta-sync">Tus datos se sincronizan con tu Google Drive.</p>
+      <button id="btn-cerrar-sesion" class="btn-ghost" type="button">Cerrar sesión</button>
+    </div>
+    <div id="cuenta-desconectado">
+      <p class="menu-color-tit">Sincroniza entre tus dispositivos</p>
+      <button id="btn-iniciar-sesion" class="btn-filled" type="button">Iniciar sesión con Google</button>
+    </div>
   </div>
 
   <!-- Diálogo Nueva/Editar materia -->

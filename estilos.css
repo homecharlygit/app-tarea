@@ -574,3 +574,25 @@ body {
   background: none;
   cursor: pointer;
 }
+
+/* --- Cuenta de Google --- */
+.acciones-top { display: flex; gap: 8px; }
+#btn-cuenta.conectado {
+  background: var(--m3-primary);
+  color: var(--m3-on-primary);
+}
+.cuenta-info { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+#cuenta-foto {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--m3-surface-container);
+}
+#cuenta-foto[hidden] { display: none; }
+.cuenta-textos { min-width: 0; }
+#cuenta-nombre { margin: 0; font-weight: 700; font-size: 15px; overflow-wrap: anywhere; }
+#cuenta-correo { margin: 2px 0 0; font-size: 13px; color: var(--m3-on-surface-variant); overflow-wrap: anywhere; }
+.cuenta-sync { margin: 0 0 14px; font-size: 13px; color: var(--m3-on-surface-variant); }
+#menu-cuenta .btn-filled { width: 100%; margin-top: 10px; }
+#menu-cuenta .btn-ghost { width: 100%; }
