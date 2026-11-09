@@ -336,3 +336,25 @@ main {
   background: none;
   cursor: pointer;
 }
+
+/* --- Menú selector de color de la app --- */
+.menu-color {
+  position: fixed;
+  top: 60px;
+  right: 12px;
+  z-index: 30;
+  width: min(88vw, 300px);
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--md-sys-color-surface-container-high, #e9e9ec);
+  color: var(--md-sys-color-on-surface, #1a1c1e);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+}
+.menu-color[hidden] {
+  display: none;
+}
+.menu-color-tit {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 500;
+}

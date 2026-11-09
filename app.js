@@ -16,6 +16,7 @@ import {
   actualizarMateria,
   borrarMateria,
   contarUsos,
+  cambiarColor,
   PALETA,
 } from './datos.js';
 import { hoyISO } from './fechas.js';
@@ -49,8 +50,14 @@ function pintarTodo() {
 export function actualizar(nuevoEstado) {
   estado = nuevoEstado;
   const aviso = guardar(window.localStorage, estado);
+  aplicarColor(estado.color);
   pintarTodo();
   if (aviso) mostrarAviso(aviso);
+}
+
+/** Aplica el color del tema a <m3e-theme>; así toda la app se recolorea. */
+export function aplicarColor(color) {
+  el('tema')?.setAttribute('color', color);
 }
 
 function onAlternar(id) {
@@ -259,6 +266,42 @@ function borrarMateriaForm() {
   dialogoMateria.close();
 }
 
+// ===================== Selector de color de la app =====================
+
+const menuColor = el('menu-color');
+
+/** Dibuja los swatches del menú de color, marcando el color actual. */
+function pintarMenuColor() {
+  const cont = el('menu-color-swatches');
+  cont.replaceChildren();
+  for (const c of PALETA) {
+    const sw = document.createElement('button');
+    sw.type = 'button';
+    sw.className = 'swatch' + (c.color.toLowerCase() === estado.color.toLowerCase() ? ' sel' : '');
+    sw.style.background = c.color;
+    sw.setAttribute('aria-label', c.nombre);
+    sw.addEventListener('click', () => {
+      actualizar(cambiarColor(estado, c.color));
+      pintarMenuColor();
+      cerrarMenuColor();
+    });
+    cont.appendChild(sw);
+  }
+}
+
+function abrirMenuColor() {
+  el('menu-color-custom').value = estado.color;
+  pintarMenuColor();
+  menuColor.hidden = false;
+}
+function cerrarMenuColor() {
+  menuColor.hidden = true;
+}
+function alternarMenuColor() {
+  if (menuColor.hidden) abrirMenuColor();
+  else cerrarMenuColor();
+}
+
 // ===================== Chips de filtro =====================
 function conectarFiltros() {
   const chips = Array.from(el('filtro-tareas').querySelectorAll('m3e-filter-chip'));
@@ -286,11 +329,25 @@ function conectarBotones() {
   el('btn-mat-cancelar')?.addEventListener('click', () => dialogoMateria.close());
   el('btn-mat-borrar')?.addEventListener('click', borrarMateriaForm);
   el('campo-mat-color-custom')?.addEventListener('input', (e) => elegirColor(e.target.value));
-  // #btn-color se conecta en la Task 6.
+
+  el('btn-color')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    alternarMenuColor();
+  });
+  el('menu-color-custom')?.addEventListener('input', (e) => {
+    actualizar(cambiarColor(estado, e.target.value));
+  });
+  // Cerrar el menú de color al tocar fuera
+  document.addEventListener('click', (e) => {
+    if (!menuColor.hidden && !menuColor.contains(e.target) && e.target.id !== 'btn-color') {
+      cerrarMenuColor();
+    }
+  });
 }
 
 // Arranque
 conectarFiltros();
 conectarBotones();
+aplicarColor(estado.color);
 pintarTodo();
 if (inicio.aviso) mostrarAviso(inicio.aviso);
