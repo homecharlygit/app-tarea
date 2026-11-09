@@ -30,7 +30,7 @@ main {
 .lista {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   margin-top: 12px;
 }
 
@@ -38,22 +38,26 @@ main {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px 12px 20px;
-  border-radius: 16px;
-  background: var(--md-sys-color-surface-container, #f1f1f4);
+  gap: 14px;
+  padding: 16px 18px 16px 24px;
+  border-radius: 26px;
+  background: var(--md-sys-color-surface-container-high, #f1f1f4);
   color: var(--md-sys-color-on-surface, #1a1c1e);
   cursor: pointer;
   overflow: hidden;
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+.item:active {
+  transform: scale(0.98);
 }
 
-/* Barrita de 6px a la izquierda con el color de la materia */
+/* Barrita a la izquierda con el color de la materia */
 .item .barra {
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
-  width: 6px;
+  width: 8px;
   background: var(--md-sys-color-outline-variant, #c3c7cf);
 }
 
@@ -63,8 +67,9 @@ main {
 }
 
 .item .titulo {
-  font-weight: 500;
-  font-size: 15px;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: -0.1px;
   overflow-wrap: anywhere;
 }
 
@@ -88,13 +93,14 @@ main {
 /* Etiqueta de urgencia */
 .urgencia {
   flex-shrink: 0;
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 700;
-  padding: 4px 10px;
+  letter-spacing: 0.2px;
+  padding: 6px 13px;
   border-radius: 999px;
   white-space: nowrap;
-  background: var(--md-sys-color-surface-container-high, #e9e9ec);
-  color: var(--md-sys-color-on-surface-variant, #43474e);
+  background: var(--md-sys-color-secondary-container, #d6e3ff);
+  color: var(--md-sys-color-on-secondary-container, #001d35);
 }
 .urgencia.vencida,
 .urgencia.hoy {
@@ -291,8 +297,8 @@ main {
 }
 .item .circulo {
   flex-shrink: 0;
-  width: 28px;
-  height: 28px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   background: var(--md-sys-color-outline-variant, #c3c7cf);
 }
