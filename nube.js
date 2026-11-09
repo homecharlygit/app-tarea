@@ -21,9 +21,13 @@ let archivoId = null;
 let usuario = null;
 let cbs = {};
 
-/** ¿Ya pegaron un Client ID real en config.js? */
+/** ¿Ya pegaron un Client ID real (y bien formado) en config.js? */
 export function nubeConfigurada() {
-  return !!CLIENT_ID && !CLIENT_ID.startsWith('TU_');
+  return (
+    !!CLIENT_ID &&
+    !CLIENT_ID.startsWith('TU_') &&
+    CLIENT_ID.endsWith('.apps.googleusercontent.com')
+  );
 }
 
 export function estaConectado() {
