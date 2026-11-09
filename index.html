@@ -5,155 +5,142 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mis Tareas</title>
 
-  <!-- Tipografía M3 e iconos (Material Symbols) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Material+Symbols+Outlined&display=swap" />
-
-  <!--
-    Librería Material 3 Expressive (M3E), versión fijada 2.5.12.
-    Se carga el bundle único "all" por el endpoint /+esm de jsDelivr: así todos
-    los componentes comparten UNA sola copia de lit (necesaria para que el tema
-    llegue a los componentes hijos) y se evita el import map, que es frágil y no
-    se puede depurar sin navegador. Cambiar de versión = editar esta línea.
-  -->
-  <script type="module"
-    src="https://cdn.jsdelivr.net/npm/@m3e/web@2.5.12/all/+esm"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..600,0..1,0" />
 
   <link rel="stylesheet" href="estilos.css" />
 </head>
 <body>
-  <m3e-theme id="tema" color="#6750A4" variant="expressive" scheme="auto" motion="expressive" strong-focus>
-    <m3e-app-bar size="medium">
-      <span slot="title">Mis Tareas</span>
-      <m3e-icon-button id="btn-color" slot="trailing" aria-label="Cambiar color de la app">
-        <m3e-icon name="palette"></m3e-icon>
-      </m3e-icon-button>
-    </m3e-app-bar>
+  <div class="app">
+    <header class="topbar">
+      <h1>Mis Tareas</h1>
+      <button id="btn-color" class="icon-btn-tonal" aria-label="Color de la app" type="button">
+        <span class="material-symbols-rounded">palette</span>
+      </button>
+    </header>
+
+    <nav class="tabs" id="tabs">
+      <button class="tab is-selected" type="button" data-panel="panel-tareas">
+        <span class="material-symbols-rounded">checklist</span>Tareas
+      </button>
+      <button class="tab" type="button" data-panel="panel-examenes">
+        <span class="material-symbols-rounded">calendar_month</span>Exámenes
+      </button>
+      <button class="tab" type="button" data-panel="panel-materias">
+        <span class="material-symbols-rounded">palette</span>Materias
+      </button>
+    </nav>
 
     <main>
-      <m3e-tabs>
-        <m3e-tab selected for="panel-tareas">
-          <m3e-icon slot="icon" name="checklist"></m3e-icon>Tareas
-        </m3e-tab>
-        <m3e-tab for="panel-examenes">
-          <m3e-icon slot="icon" name="event"></m3e-icon>Exámenes
-        </m3e-tab>
-        <m3e-tab for="panel-materias">
-          <m3e-icon slot="icon" name="palette"></m3e-icon>Materias
-        </m3e-tab>
+      <section id="panel-tareas" class="panel">
+        <div class="chips" id="filtro-tareas">
+          <button class="chip is-selected" type="button" data-filtro="pendientes">Pendientes</button>
+          <button class="chip" type="button" data-filtro="hechas">Hechas</button>
+        </div>
+        <div id="lista-tareas" class="lista"></div>
+      </section>
 
-        <m3e-tab-panel id="panel-tareas">
-          <m3e-chip-set id="filtro-tareas" class="filtros">
-            <m3e-filter-chip value="pendientes" selected>Pendientes</m3e-filter-chip>
-            <m3e-filter-chip value="hechas">Hechas</m3e-filter-chip>
-          </m3e-chip-set>
-          <div id="lista-tareas" class="lista"></div>
-        </m3e-tab-panel>
+      <section id="panel-examenes" class="panel" hidden>
+        <div id="lista-examenes" class="lista"></div>
+      </section>
 
-        <m3e-tab-panel id="panel-examenes">
-          <div id="lista-examenes" class="lista"></div>
-        </m3e-tab-panel>
-
-        <m3e-tab-panel id="panel-materias">
-          <div id="lista-materias" class="lista"></div>
-        </m3e-tab-panel>
-      </m3e-tabs>
+      <section id="panel-materias" class="panel" hidden>
+        <div id="lista-materias" class="lista"></div>
+      </section>
     </main>
 
-    <m3e-fab id="btn-nueva" extended aria-label="Nueva">
-      <m3e-icon name="add"></m3e-icon>
-      <span slot="label">Nueva</span>
-    </m3e-fab>
+    <button id="btn-nueva" class="fab" type="button">
+      <span class="material-symbols-rounded">add</span>Nueva
+    </button>
 
-    <!-- Aviso tipo snackbar (solo aparece si falla el guardado/carga) -->
     <div id="aviso" role="status" aria-live="polite"></div>
+  </div>
 
-    <!-- Diálogo Nueva/Editar -->
-    <dialog id="dialogo-elemento" class="dialogo">
-      <div class="form">
-        <h2 id="dialogo-titulo">Nueva tarea</h2>
+  <!-- Diálogo Nueva/Editar -->
+  <dialog id="dialogo-elemento" class="dialogo">
+    <div class="form">
+      <h2 id="dialogo-titulo">Nueva tarea</h2>
 
-        <div class="seg" id="campo-tipo" role="radiogroup" aria-label="Tipo">
-          <label class="seg-op">
-            <input type="radio" name="tipo" value="tarea" checked /><span>Tarea</span>
-          </label>
-          <label class="seg-op">
-            <input type="radio" name="tipo" value="examen" /><span>Examen</span>
-          </label>
-        </div>
-
-        <label class="campo">
-          <span class="etq">Título</span>
-          <input type="text" id="campo-titulo" maxlength="120" autocomplete="off" />
-          <span class="error" id="error-titulo"></span>
+      <div class="segmented" id="campo-tipo" role="radiogroup" aria-label="Tipo">
+        <label class="seg-op">
+          <input type="radio" name="tipo" value="tarea" checked /><span>Tarea</span>
         </label>
-
-        <label class="campo">
-          <span class="etq">Materia</span>
-          <select id="campo-materia"></select>
+        <label class="seg-op">
+          <input type="radio" name="tipo" value="examen" /><span>Examen</span>
         </label>
-
-        <label class="campo">
-          <span class="etq">Fecha</span>
-          <input type="date" id="campo-fecha" />
-          <span class="error" id="error-fecha"></span>
-        </label>
-
-        <label class="campo">
-          <span class="etq">Notas (opcional)</span>
-          <textarea id="campo-notas" rows="2" maxlength="500"></textarea>
-        </label>
-
-        <div class="acciones">
-          <m3e-button id="btn-borrar" variant="text" type="button">Borrar</m3e-button>
-          <span class="espaciador"></span>
-          <m3e-button id="btn-cancelar" variant="text" type="button">Cancelar</m3e-button>
-          <m3e-button id="btn-guardar" variant="filled" type="button">Guardar</m3e-button>
-        </div>
       </div>
-    </dialog>
 
-    <!-- Menú del selector de color de la app -->
-    <div id="menu-color" class="menu-color" hidden>
-      <p class="menu-color-tit">Color de la app</p>
-      <div id="menu-color-swatches" class="colores"></div>
-      <label class="color-custom">
-        <input type="color" id="menu-color-custom" />
-        <span>Personalizado</span>
+      <label class="campo">
+        <span class="etq">Título</span>
+        <input type="text" id="campo-titulo" maxlength="120" autocomplete="off" />
+        <span class="error" id="error-titulo"></span>
       </label>
-    </div>
 
-    <!-- Diálogo Nueva/Editar materia -->
-    <dialog id="dialogo-materia" class="dialogo">
-      <div class="form">
-        <h2 id="dialogo-materia-titulo">Nueva materia</h2>
+      <label class="campo">
+        <span class="etq">Materia</span>
+        <select id="campo-materia"></select>
+      </label>
 
-        <label class="campo">
-          <span class="etq">Nombre</span>
-          <input type="text" id="campo-mat-nombre" maxlength="40" autocomplete="off" />
-          <span class="error" id="error-mat-nombre"></span>
-        </label>
+      <label class="campo">
+        <span class="etq">Fecha</span>
+        <input type="date" id="campo-fecha" />
+        <span class="error" id="error-fecha"></span>
+      </label>
 
-        <div class="campo">
-          <span class="etq">Color</span>
-          <div id="campo-mat-colores" class="colores"></div>
-          <label class="color-custom">
-            <input type="color" id="campo-mat-color-custom" />
-            <span>Personalizado</span>
-          </label>
-        </div>
+      <label class="campo">
+        <span class="etq">Notas (opcional)</span>
+        <textarea id="campo-notas" rows="2" maxlength="500"></textarea>
+      </label>
 
-        <div class="acciones">
-          <m3e-button id="btn-mat-borrar" variant="text" type="button">Borrar</m3e-button>
-          <span class="espaciador"></span>
-          <m3e-button id="btn-mat-cancelar" variant="text" type="button">Cancelar</m3e-button>
-          <m3e-button id="btn-mat-guardar" variant="filled" type="button">Guardar</m3e-button>
-        </div>
+      <div class="acciones">
+        <button id="btn-borrar" class="btn-ghost" type="button">Borrar</button>
+        <span class="espaciador"></span>
+        <button id="btn-cancelar" class="btn-ghost" type="button">Cancelar</button>
+        <button id="btn-guardar" class="btn-filled" type="button">Guardar</button>
       </div>
-    </dialog>
-  </m3e-theme>
+    </div>
+  </dialog>
+
+  <!-- Menú selector de color de la app -->
+  <div id="menu-color" class="menu-color" hidden>
+    <p class="menu-color-tit">Color de la app</p>
+    <div id="menu-color-swatches" class="colores"></div>
+    <label class="color-custom">
+      <input type="color" id="menu-color-custom" />
+      <span>Personalizado</span>
+    </label>
+  </div>
+
+  <!-- Diálogo Nueva/Editar materia -->
+  <dialog id="dialogo-materia" class="dialogo">
+    <div class="form">
+      <h2 id="dialogo-materia-titulo">Nueva materia</h2>
+
+      <label class="campo">
+        <span class="etq">Nombre</span>
+        <input type="text" id="campo-mat-nombre" maxlength="40" autocomplete="off" />
+        <span class="error" id="error-mat-nombre"></span>
+      </label>
+
+      <div class="campo">
+        <span class="etq">Color</span>
+        <div id="campo-mat-colores" class="colores"></div>
+        <label class="color-custom">
+          <input type="color" id="campo-mat-color-custom" />
+          <span>Personalizado</span>
+        </label>
+      </div>
+
+      <div class="acciones">
+        <button id="btn-mat-borrar" class="btn-ghost" type="button">Borrar</button>
+        <span class="espaciador"></span>
+        <button id="btn-mat-cancelar" class="btn-ghost" type="button">Cancelar</button>
+        <button id="btn-mat-guardar" class="btn-filled" type="button">Guardar</button>
+      </div>
+    </div>
+  </dialog>
 
   <script type="module" src="app.js"></script>
 </body>

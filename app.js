@@ -55,9 +55,9 @@ export function actualizar(nuevoEstado) {
   if (aviso) mostrarAviso(aviso);
 }
 
-/** Aplica el color del tema a <m3e-theme>; así toda la app se recolorea. */
+/** Fija --m3-primary; por color-mix, toda la app se recolorea. */
 export function aplicarColor(color) {
-  el('tema')?.setAttribute('color', color);
+  document.documentElement.style.setProperty('--m3-primary', color);
 }
 
 function onAlternar(id) {
@@ -302,17 +302,27 @@ function alternarMenuColor() {
   else cerrarMenuColor();
 }
 
+// ===================== Pestañas =====================
+function conectarTabs() {
+  const tabs = Array.from(document.querySelectorAll('.tab'));
+  for (const tab of tabs) {
+    tab.addEventListener('click', () => {
+      for (const t of tabs) t.classList.toggle('is-selected', t === tab);
+      const destino = tab.dataset.panel;
+      for (const panel of document.querySelectorAll('.panel')) {
+        panel.hidden = panel.id !== destino;
+      }
+    });
+  }
+}
+
 // ===================== Chips de filtro =====================
 function conectarFiltros() {
-  const chips = Array.from(el('filtro-tareas').querySelectorAll('m3e-filter-chip'));
+  const chips = Array.from(el('filtro-tareas').querySelectorAll('.chip'));
   for (const chip of chips) {
-    chip.addEventListener('change', () => {
-      if (chip.selected) {
-        for (const otro of chips) if (otro !== chip) otro.selected = false;
-        filtro = chip.getAttribute('value');
-      } else {
-        chip.selected = true; // no permitir quedarse sin filtro
-      }
+    chip.addEventListener('click', () => {
+      filtro = chip.dataset.filtro;
+      for (const c of chips) c.classList.toggle('is-selected', c === chip);
       pintarTodo();
     });
   }
@@ -346,6 +356,7 @@ function conectarBotones() {
 }
 
 // Arranque
+conectarTabs();
 conectarFiltros();
 conectarBotones();
 aplicarColor(estado.color);

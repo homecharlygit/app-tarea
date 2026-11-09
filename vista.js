@@ -55,12 +55,16 @@ export function pintarTareas(contenedor, estado, filtro, hoyIso, acciones) {
     if (color) barra.style.background = color;
     item.appendChild(barra);
 
-    // Casilla (no debe abrir el formulario al tocarla)
-    const check = document.createElement('m3e-checkbox');
+    // Casilla redonda (no debe abrir el formulario al tocarla)
+    const check = document.createElement('button');
+    check.type = 'button';
+    check.className = 'check' + (tarea.hecha ? ' on' : '');
     check.setAttribute('aria-label', 'Marcar como hecha');
-    if (tarea.hecha) check.setAttribute('checked', '');
-    check.addEventListener('click', (e) => e.stopPropagation());
-    check.addEventListener('change', (e) => {
+    const icono = document.createElement('span');
+    icono.className = 'material-symbols-rounded';
+    icono.textContent = 'check';
+    check.appendChild(icono);
+    check.addEventListener('click', (e) => {
       e.stopPropagation();
       acciones.onAlternar(tarea.id);
     });
