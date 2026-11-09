@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Política de Privacidad — Mis Tareas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #6750A4;
+      --surface: #fdf8ff;
+      --on-surface: #1c1b1f;
+      --variant: #48464c;
+      --card: #f3eff7;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface: #141218;
+        --on-surface: #e6e1e9;
+        --variant: #cac4d0;
+        --card: #211f26;
+        --primary: #cfbcff;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Rubik', system-ui, sans-serif;
+      background: var(--surface);
+      color: var(--on-surface);
+      line-height: 1.6;
+    }
+    main { max-width: 680px; margin: 0 auto; padding: 32px 20px 64px; }
+    h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.5px; margin: 0 0 4px; }
+    .fecha { color: var(--variant); font-size: 14px; margin: 0 0 28px; }
+    h2 { font-size: 19px; font-weight: 700; margin: 28px 0 8px; }
+    p, li { font-size: 15.5px; color: var(--on-surface); }
+    a { color: var(--primary); font-weight: 600; }
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 16px 20px;
+      margin-top: 12px;
+    }
+    .volver {
+      display: inline-block;
+      margin-top: 32px;
+      padding: 12px 22px;
+      border-radius: 100px;
+      background: var(--primary);
+      color: var(--surface);
+      text-decoration: none;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Política de Privacidad</h1>
+    <p class="fecha">Mis Tareas · Última actualización: 9 de noviembre de 2026</p>
+
+    <p>
+      <strong>Mis Tareas</strong> es una aplicación personal para organizar tareas,
+      exámenes y materias escolares. Esta política explica qué datos maneja y dónde
+      se guardan. En resumen: <strong>tus datos son tuyos y se quedan contigo</strong>.
+    </p>
+
+    <h2>Qué datos se manejan</h2>
+    <ul>
+      <li>Las tareas, exámenes, materias y preferencias (como el color) que tú escribes dentro de la app.</li>
+      <li>Si inicias sesión con Google: tu nombre, correo y foto de perfil, usados únicamente para mostrarte quién está conectado.</li>
+    </ul>
+
+    <h2>Dónde se guardan</h2>
+    <div class="card">
+      <p style="margin:0">
+        Tus datos se guardan <strong>en tu propio navegador</strong> y, si inicias
+        sesión, en una <strong>carpeta privada de tu propio Google Drive</strong>
+        (el espacio <code>appDataFolder</code>, que solo esta app puede ver). No se
+        envían a ningún servidor del desarrollador ni a terceros.
+      </p>
+    </div>
+
+    <h2>Quién tiene acceso</h2>
+    <p>
+      Solo tú. El desarrollador <strong>no tiene acceso</strong> a tus tareas ni a tu
+      Google Drive. La app funciona completamente en tu dispositivo (es un sitio
+      estático, sin servidor propio).
+    </p>
+
+    <h2>Permisos de Google</h2>
+    <p>
+      La app solicita acceso únicamente a su <strong>carpeta de datos de aplicación</strong>
+      en tu Drive (<code>drive.appdata</code>). No puede ver, abrir ni modificar tus
+      demás archivos de Google Drive.
+    </p>
+
+    <h2>Cómo eliminar tus datos</h2>
+    <ul>
+      <li>Cierra sesión en la app desde el botón de cuenta.</li>
+      <li>Revoca el acceso de la app en tu cuenta de Google
+        (<a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>).</li>
+      <li>Borra los datos del sitio en tu navegador.</li>
+    </ul>
+
+    <h2>Publicidad y rastreo</h2>
+    <p>La app <strong>no</strong> muestra publicidad, <strong>no</strong> usa cookies de rastreo y <strong>no</strong> recopila analítica.</p>
+
+    <h2>Contacto</h2>
+    <p>Para cualquier duda sobre esta política, escribe a: <a href="mailto:charlygamesyt154@gmail.com">charlygamesyt154@gmail.com</a>.</p>
+
+    <a class="volver" href="./">← Volver a la app</a>
+  </main>
+</body>
+</html>
