@@ -157,3 +157,118 @@ main {
 @media (max-width: 420px) {
   main { padding: 6px 10px 92px; }
 }
+
+/* --- Diálogo Nueva/Editar --- */
+.dialogo {
+  border: none;
+  border-radius: 28px;
+  padding: 0;
+  width: min(92vw, 440px);
+  background: var(--md-sys-color-surface-container-high, #e9e9ec);
+  color: var(--md-sys-color-on-surface, #1a1c1e);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+.dialogo::backdrop {
+  background: rgba(0, 0, 0, 0.45);
+}
+.dialogo .form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px;
+}
+.dialogo h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+/* Selector segmentado Tarea/Examen */
+.seg {
+  display: flex;
+  border: 1px solid var(--md-sys-color-outline, #73777f);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.seg-op {
+  flex: 1;
+  text-align: center;
+}
+.seg-op input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.seg-op span {
+  display: block;
+  padding: 9px 0;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.seg-op input:checked + span {
+  background: var(--md-sys-color-secondary-container, #d6e3ff);
+  color: var(--md-sys-color-on-secondary-container, #001d35);
+}
+.seg-op input:disabled + span {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Campos */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.campo .etq {
+  font-size: 13px;
+  color: var(--md-sys-color-on-surface-variant, #43474e);
+}
+.campo input,
+.campo select,
+.campo textarea {
+  font: inherit;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--md-sys-color-outline, #73777f);
+  background: var(--md-sys-color-surface, #fdfcff);
+  color: var(--md-sys-color-on-surface, #1a1c1e);
+  width: 100%;
+}
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+  outline: 2px solid var(--md-sys-color-primary, #1a73e8);
+  border-color: transparent;
+}
+.campo textarea {
+  resize: vertical;
+  min-height: 44px;
+}
+.campo.con-error input,
+.campo.con-error select {
+  border-color: var(--md-sys-color-error, #ba1a1a);
+}
+.error {
+  font-size: 12px;
+  color: var(--md-sys-color-error, #ba1a1a);
+  min-height: 0;
+}
+.error:empty {
+  display: none;
+}
+
+/* Acciones */
+.acciones {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+.acciones .espaciador {
+  flex: 1;
+}
+#btn-borrar[hidden] {
+  display: none;
+}

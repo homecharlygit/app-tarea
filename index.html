@@ -69,6 +69,51 @@
 
     <!-- Aviso tipo snackbar (solo aparece si falla el guardado/carga) -->
     <div id="aviso" role="status" aria-live="polite"></div>
+
+    <!-- Diálogo Nueva/Editar -->
+    <dialog id="dialogo-elemento" class="dialogo">
+      <div class="form">
+        <h2 id="dialogo-titulo">Nueva tarea</h2>
+
+        <div class="seg" id="campo-tipo" role="radiogroup" aria-label="Tipo">
+          <label class="seg-op">
+            <input type="radio" name="tipo" value="tarea" checked /><span>Tarea</span>
+          </label>
+          <label class="seg-op">
+            <input type="radio" name="tipo" value="examen" /><span>Examen</span>
+          </label>
+        </div>
+
+        <label class="campo">
+          <span class="etq">Título</span>
+          <input type="text" id="campo-titulo" maxlength="120" autocomplete="off" />
+          <span class="error" id="error-titulo"></span>
+        </label>
+
+        <label class="campo">
+          <span class="etq">Materia</span>
+          <select id="campo-materia"></select>
+        </label>
+
+        <label class="campo">
+          <span class="etq">Fecha</span>
+          <input type="date" id="campo-fecha" />
+          <span class="error" id="error-fecha"></span>
+        </label>
+
+        <label class="campo">
+          <span class="etq">Notas (opcional)</span>
+          <textarea id="campo-notas" rows="2" maxlength="500"></textarea>
+        </label>
+
+        <div class="acciones">
+          <m3e-button id="btn-borrar" variant="text" type="button">Borrar</m3e-button>
+          <span class="espaciador"></span>
+          <m3e-button id="btn-cancelar" variant="text" type="button">Cancelar</m3e-button>
+          <m3e-button id="btn-guardar" variant="filled" type="button">Guardar</m3e-button>
+        </div>
+      </div>
+    </dialog>
   </m3e-theme>
 
   <script type="module" src="app.js"></script>
