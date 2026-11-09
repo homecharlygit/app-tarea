@@ -3,7 +3,7 @@
 // (no mutan), para que la vista siempre pinte a partir del estado devuelto.
 
 export const CLAVE = 'app-tareas:v1';
-export const COLOR_INICIAL = '#1A73E8';
+export const COLOR_INICIAL = '#6750A4';
 
 export const PALETA = [
   { nombre: 'Azul', color: '#1A73E8' },

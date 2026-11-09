@@ -48,7 +48,7 @@ function almacenRoto() {
 
 test('constantes básicas', () => {
   assert.equal(CLAVE, 'app-tareas:v1');
-  assert.equal(COLOR_INICIAL, '#1A73E8');
+  assert.equal(COLOR_INICIAL, '#6750A4');
   assert.equal(PALETA.length, 8);
   assert.ok(PALETA.every((c) => c.nombre && /^#[0-9A-F]{6}$/i.test(c.color)));
 });
@@ -69,7 +69,7 @@ test('cargar con almacén vacío da estado inicial sin aviso', () => {
   assert.equal(aviso, null);
   assert.equal(estado.materias.length, 5);
   assert.equal(estado.tareas.length, 0);
-  assert.equal(estado.color, '#1A73E8');
+  assert.equal(estado.color, '#6750A4');
 });
 
 test('cargar con JSON roto no se cae: estado inicial + aviso', () => {
@@ -217,7 +217,7 @@ test('examenesOrdenados: futuros y hoy ascendentes, luego pasados descendentes',
 
 test('cambiarColor actualiza el color del estado sin mutar', () => {
   const original = estadoInicial();
-  const nuevo = cambiarColor(original, '#6750A4');
-  assert.equal(nuevo.color, '#6750A4');
-  assert.equal(original.color, '#1A73E8');
+  const nuevo = cambiarColor(original, '#1E8E3E');
+  assert.equal(nuevo.color, '#1E8E3E');
+  assert.equal(original.color, '#6750A4');
 });
