@@ -7,4 +7,4 @@
 //
 // Mientras diga TU_CLIENT_ID, el login queda DESACTIVADO y la app funciona
 // igual, guardando solo en este navegador.
-export const CLIENT_ID = 'TU_CLIENT_ID.apps.googleusercontent.com';
+export const CLIENT_ID = '769791680453-npkglhbettdqoj0i3g7u6msqbfu0jdnb.apps.googleusercontent.com';
